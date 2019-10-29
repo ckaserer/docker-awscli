@@ -1,0 +1,26 @@
+---
+services: docker
+
+env:
+- REPO='aws-cli' TAG='latest' MICROSCANNER_OPTIONS='--continue-on-failure'
+
+script:
+- docker build -t ${ORGANIZATION}/${REPO}:${TAG} --no-cache .
+# security check
+- >
+  if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then 
+    .travis/security-scan.sh ${ORGANIZATION}/${REPO}:${TAG}
+  else
+    echo "security scan does not run for pull request. For further information see: https://docs.travis-ci.com/user/pull-requests/#pull-requests-and-security-restrictions"
+  fi
+# Test running the container.
+- docker run --name test-container -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro ${ORGANIZATION}/${REPO}:${TAG}
+
+# Verify Ansible is available in the container.
+- docker exec --tty test-container env TERM=xterm ansible --version
+# push image
+- >
+  if [ "$TRAVIS_BRANCH" == "master" ]; then
+    echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+    docker push ${ORGANIZATION}/${REPO}
+  fi
