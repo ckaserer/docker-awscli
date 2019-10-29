@@ -2,7 +2,7 @@
 services: docker
 
 env:
-- REPO='aws-cli' TAG='latest' MICROSCANNER_OPTIONS='--continue-on-failure'
+- REPO='aws' TAG='latest' MICROSCANNER_OPTIONS='--continue-on-failure'
 
 script:
 - docker build -t ${ORGANIZATION}/${REPO}:${TAG} --no-cache .
