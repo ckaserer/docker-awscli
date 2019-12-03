@@ -32,3 +32,4 @@ script:
     else
       echo "security scan does not run for pull request. For further information see: https://docs.travis-ci.com/user/pull-requests/#pull-requests-and-security-restrictions"
     fi
+    set +ex
