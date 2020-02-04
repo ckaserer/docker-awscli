@@ -1,0 +1,5 @@
+++++
+<p align="right">
+<img alt="gepardec" width=100px src="https://github.com/Gepardec/branding/raw/master/media/logo/gepardec.png">
+</p>
+++++
