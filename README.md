@@ -1,4 +1,4 @@
-![https://travis-ci.com/Gepardec/docker-awscli](https://travis-ci.com/Gepardec/docker-awscli.svg?branch=master)
+[![Build Status](https://travis-ci.com/Gepardec/docker-awscli.svg?branch=master)](https://travis-ci.com/Gepardec/docker-awscli)
 ![](https://img.shields.io/docker/cloud/build/gepardec/awscli)
 ![](https://img.shields.io/docker/cloud/automated/gepardec/awscli)
 ![](https://img.shields.io/docker/pulls/gepardec/awscli)
