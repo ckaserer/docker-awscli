@@ -1,22 +1,30 @@
 #!/bin/bash
 
-readonly SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+readonly DOCKER_AWSCLI_HOME=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-function openshift-create-aws-dir () {
-    if [ ! -d "~/.aws" ]; then
-        echo "# create .aws folder"
-        echo "+ mkdir -p ~/.aws"
-        mkdir -p ~/.aws
-    fi
+function __docker-awscli-create-aws-dir () {
+  if [ ! -d "$(echo ~/.aws)" ]; then
+    echo "# creating .aws folder"
+    echo "+ mkdir -p $(echo ~/.aws)"
+    mkdir -p $(echo ~)/.aws
+  fi
 }
-readonly -f openshift-create-aws-dir
+readonly -f __docker-awscli-create-aws-dir
 [ "$?" -eq "0" ] || return $?
 
-# docker-aws
-function docker-aws () {
-  local command="docker run --rm -it -e TZ=Europe/Vienna -v ~/.aws:/root/.aws gepardec/aws"
-   openshift-create-aws-dir
-   echo "+ ${command} $@" && ${command} $@
+# docker-awscli
+function docker-awscli () {
+  __docker-awscli-create-aws-dir
+  local command="docker run --rm -it -e TZ=Europe/Vienna -v $(echo ~)/.aws:/root/.aws gepardec/awscli"
+  echo "+ ${command} $@" && ${command} $@
 }
-readonly -f docker-aws
+readonly -f docker-awscli
+[ "$?" -eq "0" ] || return $?
+
+# docker-awscli-build
+function docker-awscli-build () {
+  local command="docker build -t gepardec/awscli $@ ${DOCKER_AWSCLI_HOME}"
+  echo "+ ${command}" && ${command}
+}
+readonly -f docker-awscli-build
 [ "$?" -eq "0" ] || return $?
