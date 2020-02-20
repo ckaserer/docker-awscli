@@ -12,8 +12,9 @@ RUN yum install -y \
         openssl && \
     yum clean all
 
-ENV AWS_CONFIG_FILE=/.aws/config
-
+ENV AWS_CONFIG_FILE=/.aws/config \
+    AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials
+    
 # AWS CLI
 RUN pip3 install \
         awscli \
