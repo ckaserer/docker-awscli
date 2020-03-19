@@ -9,5 +9,5 @@ echo -e "a\nb\nc\njson\n" | docker run --rm -i gepardec/awscli aws-wrapper confi
 docker tag \
   gepardec/awscli:latest \
   gepardec/awscli:$(\
-    docker-awscli aws --version | awk '{print $1}' | sed "s#aws-cli/##g")
+    docker run --rm gepardec/awscli aws --version | awk '{print $1}' | sed "s#aws-cli/##g")
 set +e
