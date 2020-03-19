@@ -15,7 +15,7 @@ readonly -f __docker-awscli-create-aws-dir
 # docker-awscli
 function docker-awscli () {
   __docker-awscli-create-aws-dir
-  local command="docker run --rm -it -e TZ=Europe/Vienna -v $(echo ~)/.aws:/root/.aws gepardec/awscli"
+  local command="docker run --rm -it -e TZ=Europe/Vienna -v $(echo ~)/.aws:/.aws gepardec/awscli"
   echo "+ ${command} $@" && ${command} $@
 }
 readonly -f docker-awscli
