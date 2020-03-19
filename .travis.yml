@@ -2,6 +2,10 @@ version: "~> 1.0"
 os: linux
 language: shell
 services: docker
+env:
+  global:
+    - secure: nGdHwINw5Kw/ntZpcZuZxwutBw3vgfeR1mLGt/3Ent7eP3aEBcWN9/oKzRxkdxNehLNgz7fTHMHQkB/RFkBQ82rsjsr+vSzC1zXYCp1ltPcJszHKYn4mGWFhSs6BH0an/uw4q50lIrMfesFkH4y6IsQGndG71XimykxltVJbjWiIlaPkEwkBmx0nIUSRByIDjwDm/b/FirhI73AIZnXNLAyEAqsgi8KxU9Z992FxBUxci7cBlYtjNUe/cy0Jx55TzawiJgmcaqsnrGkh0n+J42rLroFR+WsNPmQ336Eu/iuivgDyEW+dBzYJ9NSgWEZyIqE6jyYQk4M5lT2Ksvwi7WJvZevuPozb7GLrq30LhOACTbSlKZXLp0T9J4UmO0uyneYXxTrJ9vD//BdxAcoGOzA+zRnrGn36s/IF28srC4pafCfFhRXLMx15T6SqKnc5KhGW4UOjJO1dea6tiOEU7C2EwDse6LHq3UJXg34LPjCRF6X5mJTq3T2SRto6McDoeodu4rJeQR4qc3UDuR48eJLJVmyKTuBMMxFlgypd5ZFGxSonOgIyZ1Tn6t8gqC8Ik18NQYIvTGkeRvcXX4gBjDJqdKjs8eCZqZAyZ52JWblgFbbmWl0S/nK+T/1wIgGCmL7CC6suyJLw8bIBlLWhJjJmzTRZKEADnRemaTKKF0A=
+    - secure: ayWLGOdkiKAzUBw74FpaUsLAUvkUljWWLsBIRFMplSEOKz5OsLhdb8u3Z1714KoaUYNP2bqg9uOQclLY/WxgVcVF71kBYsqdm7BSwlb+7i66tyf6SdBDdRCkQhXni+0sf6BVGtgNe+45hQ+BOG+E1ctw8XMi+TBYAEXs+zEqEH/Ddh9Gj1wD3bhqsvhEHVCtM8RxIrphxq+cHuOASALmzIhFtBxUtC8eh9QSu4oEYSH2N7N3kcluuK8GZH4bgUCqaIz1TOnTDHdhEcZW9NDweUy/kAec9ZBbj8E7dxYsKWZMNOys80Qic5QT1hWuqcWJGGgG8oi8wCG9Z5gQysPZVrFl8LA2c/z4j941+gTxjypnubWZzT8nHtWRnm7TSz8WSbJFA6HeizlH+rILr+0JhyorrNc9nuOhytFKyToti2C6rnAoNUI7fk4ngaDOs1/e1cgPAjFn6NPOHHRgea4Ea1Xh6ddqWBzIfylUEIVZC88aBZi0cVB9htePVSfM+5d7msYj863thNv1hqB9q7+LVkZFZ5fvi+x41URbH4FOc7fen37Pd7fjTUeTIK8zTj9FxpuqlvL3p4+M4Le8gFCsPDQA9HL9Jh5NyG71jHWP6PnP+TqmhTZ+NR12aMWYpZ8VCx2jJuQABsoLwGKtQiTE4AQb2gGOePA0upDojNkh5hU=
 notifications:
   email:
     on_success: never
@@ -16,7 +20,15 @@ notifications:
       - by %{author} %{result} in %{duration}
     on_success: change
     on_failure: always
-script:
-  - docker build -t gepardec/awscli --no-cache .
-  - docker run --rm -it gepardec/awscli aws --version
-  - echo -e "a\nb\nc\njson\n" | docker run --rm -i gepardec/awscli aws-wrapper configure list
+before_install: curl -sSL https://raw.githubusercontent.com/ckaserer/bash-script-collection/master/bash-fetch-script-collection.sh | bash
+script: ".ci/test.sh"
+deploy:
+  provider: script
+  script: bash bash-script-collection/container-image-push.sh \ 
+    --image gepardec/awscli \
+    --username ${REGISTRY_USER} \
+    --password ${REGISTRY_PASS}
+  skip_cleanup: true
+  on:
+    branch: master
+  
