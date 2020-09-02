@@ -1,5 +1,6 @@
 version: "~> 1.0"
 os: linux
+dist: xenial
 language: shell
 services: docker
 env:
@@ -28,7 +29,7 @@ deploy:
     --image gepardec/awscli \
     --username ${REGISTRY_USER} \
     --password ${REGISTRY_PASS}
-  skip_cleanup: true
+  cleanup: false
   on:
     branch: master
   
